@@ -26,23 +26,18 @@ public class App
         properties.put(Context.SECURITY_CREDENTIALS, "kamil");
         Context context = new InitialContext(properties);
 
-//        EventInLogRepositoryRemote getName = (EventInLogRepositoryRemote) context.lookup
-//                ("jdd-coach/EventInLogRepositoryBean!engine.repository.EventInLogRepositoryRemote");
-//        getName.getClass();
-
 
         EventInLogRepositoryRemote lookup = (EventInLogRepositoryRemote) context.lookup(
                 "jdd-coach/EventInLogRepositoryBean!engine.repository.EventInLogRepositoryRemote");
-//        lookup.findAll().forEach(System.out::println);
-//        EventInLogRepositoryRemote x = (EventInLogRepositoryRemote) context.lookup("jdd-coach/EventInLogRepositoryBean!engine.repository.EventInLogRepositoryRemote");
-
 
         int size = lookup.getUsersNames().size();
-        lookup.getUsersNames().get(0).toString();
-//        x.findAll();
-        System.out.println(size);
-        lookup.getUsersNames().forEach(System.out::println);
+        String name = lookup.getUsersNames().get(0).toString();
+        String recString = lookup.getEventInLogRecord();
 
-        System.out.println(EventInLogRepositoryRemote.class.getClass());
+        System.out.println(size);
+//        lookup.getUsersNames().forEach(System.out::println);
+//        System.out.println(EventInLogRepositoryRemote.class.getClass());
+//        System.out.println(name);
+        System.out.println(recString);
     }
 }
