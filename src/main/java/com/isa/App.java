@@ -1,10 +1,15 @@
 package com.isa;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.isa.domain.JsonEventInLog;
 import engine.repository.EventInLogRepositoryRemote;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
+import java.io.IOException;
+import java.io.Reader;
+import java.io.StringReader;
 import java.util.Hashtable;
 
 
@@ -14,9 +19,7 @@ import java.util.Hashtable;
  */
 public class App 
 {
-    public static void main( String[] args )throws NamingException
-    {
-        System.out.println( "Hello World!" );
+    public static void main( String[] args ) throws NamingException, IOException {
         Hashtable<String, String> properties = new Hashtable<String, String>();
         properties.put(Context.INITIAL_CONTEXT_FACTORY,
                 "org.wildfly.naming.client.WildFlyInitialContextFactory");
@@ -26,23 +29,26 @@ public class App
         properties.put(Context.SECURITY_CREDENTIALS, "kamil");
         Context context = new InitialContext(properties);
 
-//        EventInLogRepositoryRemote getName = (EventInLogRepositoryRemote) context.lookup
-//                ("jdd-coach/EventInLogRepositoryBean!engine.repository.EventInLogRepositoryRemote");
-//        getName.getClass();
-
-
         EventInLogRepositoryRemote lookup = (EventInLogRepositoryRemote) context.lookup(
                 "jdd-coach/EventInLogRepositoryBean!engine.repository.EventInLogRepositoryRemote");
-//        lookup.findAll().forEach(System.out::println);
-//        EventInLogRepositoryRemote x = (EventInLogRepositoryRemote) context.lookup("jdd-coach/EventInLogRepositoryBean!engine.repository.EventInLogRepositoryRemote");
-
 
         int size = lookup.getUsersNames().size();
-        lookup.getUsersNames().get(0).toString();
-//        x.findAll();
-        System.out.println(size);
-        lookup.getUsersNames().forEach(System.out::println);
+        String name = lookup.getUsersNames().get(0).toString();
+        String recString = lookup.getEventInLogRecord();
 
-        System.out.println(EventInLogRepositoryRemote.class.getClass());
+        ObjectMapper mapper = new ObjectMapper();
+        Reader reader = new StringReader(recString);
+        JsonEventInLog jsonEventInLog = mapper.readValue(reader, JsonEventInLog.class);
+        String ip = jsonEventInLog.getIp();
+        String date = jsonEventInLog.getEventDate();
+
+        System.out.println(jsonEventInLog.getCoachInfoLink());
+        System.out.println(jsonEventInLog.getEventName());
+        System.out.println(jsonEventInLog.getId());
+        System.out.println(jsonEventInLog.getEventDate());
+
+        System.out.println(recString);
+        System.out.println(ip);
+        System.out.println(size);
     }
 }
