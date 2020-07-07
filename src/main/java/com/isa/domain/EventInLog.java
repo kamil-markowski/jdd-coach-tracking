@@ -1,6 +1,7 @@
 package com.isa.domain;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @NamedQueries({
         @NamedQuery(
@@ -10,13 +11,14 @@ import javax.persistence.*;
 })
 
 @Entity
-@Table(name = "event_in_log")
+@Table(name = "event_log")
 public class EventInLog {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotNull
     private String ip;
 
     private String eventName;
@@ -24,9 +26,6 @@ public class EventInLog {
     private String coachInfoLink;
 
     private String eventDate;
-
-    public EventInLog(Long id, String ip, String eventName, String coachInfoLink, String localDateTime) {
-    }
 
     public Long getId() {
         return id;

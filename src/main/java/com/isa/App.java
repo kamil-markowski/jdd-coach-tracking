@@ -1,15 +1,15 @@
 package com.isa;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.module.SimpleModule;
-import com.isa.domain.EventInLog;
-import com.isa.domain.ItemDeserializer;
+import com.isa.domain.JsonEventInLog;
 import engine.repository.EventInLogRepositoryRemote;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
+import java.io.IOException;
+import java.io.Reader;
+import java.io.StringReader;
 import java.util.Hashtable;
 
 
@@ -19,9 +19,7 @@ import java.util.Hashtable;
  */
 public class App 
 {
-    public static void main( String[] args )throws NamingException
-    {
-        System.out.println( "Hello World!" );
+    public static void main( String[] args ) throws NamingException, IOException {
         Hashtable<String, String> properties = new Hashtable<String, String>();
         properties.put(Context.INITIAL_CONTEXT_FACTORY,
                 "org.wildfly.naming.client.WildFlyInitialContextFactory");
@@ -31,7 +29,6 @@ public class App
         properties.put(Context.SECURITY_CREDENTIALS, "kamil");
         Context context = new InitialContext(properties);
 
-
         EventInLogRepositoryRemote lookup = (EventInLogRepositoryRemote) context.lookup(
                 "jdd-coach/EventInLogRepositoryBean!engine.repository.EventInLogRepositoryRemote");
 
@@ -40,23 +37,18 @@ public class App
         String recString = lookup.getEventInLogRecord();
 
         ObjectMapper mapper = new ObjectMapper();
-        SimpleModule module = new SimpleModule();
-        module.addDeserializer(EventInLog.class, new ItemDeserializer());
-        mapper.registerModule(module);
+        Reader reader = new StringReader(recString);
+        JsonEventInLog jsonEventInLog = mapper.readValue(reader, JsonEventInLog.class);
+        String ip = jsonEventInLog.getIp();
+        String date = jsonEventInLog.getEventDate();
 
-        EventInLog eventFromJson = null;
-        try {
-            eventFromJson = mapper.readValue(recString, EventInLog.class);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-        EventInLog result = eventFromJson;
+        System.out.println(jsonEventInLog.getCoachInfoLink());
+        System.out.println(jsonEventInLog.getEventName());
+        System.out.println(jsonEventInLog.getId());
+        System.out.println(jsonEventInLog.getEventDate());
 
-        System.out.println(eventFromJson);
-        System.out.println(size);
-//        lookup.getUsersNames().forEach(System.out::println);
-//        System.out.println(EventInLogRepositoryRemote.class.getClass());
-//        System.out.println(name);
         System.out.println(recString);
+        System.out.println(ip);
+        System.out.println(size);
     }
 }
