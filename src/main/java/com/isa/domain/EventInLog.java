@@ -1,7 +1,6 @@
 package com.isa.domain;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @NamedQueries({
         @NamedQuery(
@@ -24,6 +23,48 @@ public class EventInLog {
 
     private String coachInfoLink;
 
-    private LocalDateTime eventDate;
+    private String eventDate;
 
+    public EventInLog(Long id, String ip, String eventName, String coachInfoLink, String localDateTime) {
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getIp() {
+        return ip;
+    }
+
+    public void setIp(String ip) {
+        this.ip = ip;
+    }
+
+    public String getEventName() {
+        return eventName;
+    }
+
+    public void setEventName(String eventName) {
+        this.eventName = eventName;
+    }
+
+    public String getCoachInfoLink() {
+        return coachInfoLink;
+    }
+
+    public void setCoachInfoLink(String coachInfoLink) {
+        this.coachInfoLink = coachInfoLink;
+    }
+
+    public String getEventDate() {
+        return eventDate;
+    }
+
+    public void setEventDate(String eventDate) {
+        this.eventDate = eventDate;
+    }
 }

@@ -1,5 +1,10 @@
 package com.isa;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.isa.domain.EventInLog;
+import com.isa.domain.ItemDeserializer;
 import engine.repository.EventInLogRepositoryRemote;
 
 import javax.naming.Context;
@@ -34,6 +39,20 @@ public class App
         String name = lookup.getUsersNames().get(0).toString();
         String recString = lookup.getEventInLogRecord();
 
+        ObjectMapper mapper = new ObjectMapper();
+        SimpleModule module = new SimpleModule();
+        module.addDeserializer(EventInLog.class, new ItemDeserializer());
+        mapper.registerModule(module);
+
+        EventInLog eventFromJson = null;
+        try {
+            eventFromJson = mapper.readValue(recString, EventInLog.class);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        EventInLog result = eventFromJson;
+
+        System.out.println(eventFromJson);
         System.out.println(size);
 //        lookup.getUsersNames().forEach(System.out::println);
 //        System.out.println(EventInLogRepositoryRemote.class.getClass());
