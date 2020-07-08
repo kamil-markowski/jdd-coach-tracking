@@ -1,15 +1,10 @@
 package com.isa;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.isa.domain.JsonEventInLog;
-import engine.repository.EventInLogRepositoryRemote;
+import com.isa.service.RecordDownloader;
 
-import javax.naming.Context;
-import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import java.io.IOException;
-import java.io.Reader;
-import java.io.StringReader;
 import java.util.Hashtable;
 
 
@@ -21,24 +16,28 @@ public class App
 {
     public static void main( String[] args ) throws NamingException, IOException {
         Hashtable<String, String> properties = new Hashtable<String, String>();
-        properties.put(Context.INITIAL_CONTEXT_FACTORY,
-                "org.wildfly.naming.client.WildFlyInitialContextFactory");
-        properties.put("jboss.naming.client.ejb.context", "true");
-        properties.put(Context.PROVIDER_URL, "http-remoting://localhost:8080");
-        properties.put(Context.SECURITY_PRINCIPAL, "kamil");
-        properties.put(Context.SECURITY_CREDENTIALS, "kamil");
-        Context context = new InitialContext(properties);
+//        properties.put(Context.INITIAL_CONTEXT_FACTORY,
+//                "org.wildfly.naming.client.WildFlyInitialContextFactory");
+//        properties.put("jboss.naming.client.ejb.context", "true");
+//        properties.put(Context.PROVIDER_URL, "http-remoting://localhost:8080");
+//        properties.put(Context.SECURITY_PRINCIPAL, "kamil");
+//        properties.put(Context.SECURITY_CREDENTIALS, "kamil");
+//        Context context = new InitialContext(properties);
+//
+//        EventInLogRepositoryRemote lookup = (EventInLogRepositoryRemote) context.lookup(
+//                "jdd-coach/EventInLogRepositoryBean!engine.repository.EventInLogRepositoryRemote");
+//
+//        int size = lookup.getUsersNames().size();
+//        String name = lookup.getUsersNames().get(0).toString();
+//        String recString = lookup.getEventInLogRecord();
+//
+//        ObjectMapper mapper = new ObjectMapper();
+//        Reader reader = new StringReader(recString);
+//        JsonEventInLog jsonEventInLog = mapper.readValue(reader, JsonEventInLog.class);
 
-        EventInLogRepositoryRemote lookup = (EventInLogRepositoryRemote) context.lookup(
-                "jdd-coach/EventInLogRepositoryBean!engine.repository.EventInLogRepositoryRemote");
+        RecordDownloader recordDownloader =new RecordDownloader();
 
-        int size = lookup.getUsersNames().size();
-        String name = lookup.getUsersNames().get(0).toString();
-        String recString = lookup.getEventInLogRecord();
-
-        ObjectMapper mapper = new ObjectMapper();
-        Reader reader = new StringReader(recString);
-        JsonEventInLog jsonEventInLog = mapper.readValue(reader, JsonEventInLog.class);
+        JsonEventInLog jsonEventInLog = recordDownloader.getRecord();
         String ip = jsonEventInLog.getIp();
         String date = jsonEventInLog.getEventDate();
 
@@ -47,8 +46,8 @@ public class App
         System.out.println(jsonEventInLog.getId());
         System.out.println(jsonEventInLog.getEventDate());
 
-        System.out.println(recString);
-        System.out.println(ip);
-        System.out.println(size);
+//        System.out.println(recString);
+//        System.out.println(ip);
+//        System.out.println(size);
     }
 }
