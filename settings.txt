@@ -1,3 +1,6 @@
 1. Docker:
 
 docker run -p 0.0.0.0:3310:3306 --name tracker-coach-events -e MYSQL_ROOT_PASSWORD=coachkamil -e MYSQL_DATABASE=trackingdb -d mysql
+
+2. .../tracking/rest/list
+   .../tracking/rest/add
